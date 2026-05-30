@@ -341,6 +341,16 @@ def unique_in_order(items: list[str]) -> list[str]:
     return result
 
 
+def unique_candidates_in_order(items: list[tuple[str, str]]) -> list[tuple[str, str]]:
+    seen = set()
+    result = []
+    for item in items:
+        if item not in seen:
+            result.append(item)
+            seen.add(item)
+    return result
+
+
 def safe_file_part(value: str) -> str:
     return (
         value.replace("/", "-")
@@ -646,28 +656,34 @@ def pick_svgicons(query: str, out_dir: Path) -> int:
     return run_svgicons_command(["pick", query, "--download", "--output", str(out_dir)])
 
 
-def print_search_results(provider: str, queries: list[str], limit: int, anonymous: bool) -> tuple[list[str], list[str]]:
+def print_search_results(
+    provider: str, queries: list[str], limit: int, anonymous: bool
+) -> tuple[list[str], list[str], list[tuple[str, str]]]:
     providers = provider_set(provider)
     bioicons_results: list[str] = []
     iconify_results: list[str] = []
+    download_candidates: list[tuple[str, str]] = []
     entries_by_name = bioicons_entry_map() if "bioicons" in providers else {}
 
     for query in queries:
         if "bioicons" in providers:
             results = search_bioicons(query, limit, entries_by_name)
             bioicons_results.extend(results)
+            download_candidates.extend(("bioicons", icon) for icon in results)
             print(f"\n## BioIcons: {query}")
             print("\n".join(f"bioicons:{icon}" for icon in results) if results else "(no results)")
 
         if "tabler" in providers:
             results = search_tabler(query, limit)
             iconify_results.extend(results)
+            download_candidates.extend(("iconify", icon) for icon in results)
             print(f"\n## Tabler: {query}")
             print("\n".join(results) if results else "(no results)")
 
         if "iconify" in providers:
             results = search_iconify(query, limit)
             iconify_results.extend(results)
+            download_candidates.extend(("iconify", icon) for icon in results)
             print(f"\n## Iconify: {query}")
             print("\n".join(results) if results else "(no results)")
 
@@ -675,7 +691,22 @@ def print_search_results(provider: str, queries: list[str], limit: int, anonymou
             print(f"\n## Svg/icons CLI: {query}")
             search_svgicons(query, limit, anonymous)
 
-    return unique_in_order(bioicons_results), unique_in_order(iconify_results)
+    return (
+        unique_in_order(bioicons_results),
+        unique_in_order(iconify_results),
+        unique_candidates_in_order(download_candidates),
+    )
+
+
+def split_download_candidates(candidates: list[tuple[str, str]], limit: int) -> tuple[list[str], list[str]]:
+    selected_bioicons: list[str] = []
+    selected_iconify: list[str] = []
+    for provider, icon in candidates[:limit]:
+        if provider == "bioicons":
+            selected_bioicons.append(icon)
+        else:
+            selected_iconify.append(icon)
+    return selected_bioicons, selected_iconify
 
 
 def write_licenses(out_dir: Path, downloaded: list[DownloadedIcon]) -> None:
@@ -763,7 +794,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--recommend", help="Use Svg/icons CLI to recommend icons for a brief.")
     parser.add_argument("--pick", help="Use Svg/icons CLI to pick and download one icon.")
     parser.add_argument("--limit", type=int, default=30, help="Search results per term.")
-    parser.add_argument("--download-search", type=int, default=0, help="Download the first N search results per term.")
+    parser.add_argument(
+        "--download-search",
+        type=int,
+        default=0,
+        help="Download the first N combined search results in provider priority order.",
+    )
     parser.add_argument("--preset", nargs="+", help="Curated preset(s), e.g. gene cell dna antibody oncology.")
     parser.add_argument("--icons", nargs="+", help="Explicit icons. Use bioicons:name or Iconify prefix:name.")
     parser.add_argument("--bioicons", nargs="+", help="Explicit BioIcons names, e.g. DNA_double_helix CRISPR_Cas9.")
@@ -781,6 +817,9 @@ def main() -> int:
     if args.list_presets:
         list_presets()
         return 0
+    if args.download_search < 0:
+        print("--download-search must be zero or greater.", file=sys.stderr)
+        return 2
 
     out_dir = Path(args.out)
     if args.recommend:
@@ -820,10 +859,13 @@ def main() -> int:
         selected_bioicons.extend(args.bioicons)
 
     if args.search:
-        bioicons_results, iconify_results = print_search_results(args.provider, args.search, args.limit, args.anonymous)
+        _, _, download_candidates = print_search_results(args.provider, args.search, args.limit, args.anonymous)
         if args.download_search:
-            selected_bioicons.extend(bioicons_results[: args.download_search])
-            selected_iconify.extend(iconify_results[: args.download_search])
+            searched_bioicons, searched_iconify = split_download_candidates(
+                download_candidates, args.download_search
+            )
+            selected_bioicons.extend(searched_bioicons)
+            selected_iconify.extend(searched_iconify)
 
     selected_bioicons = unique_in_order(selected_bioicons)
     selected_iconify = unique_in_order(selected_iconify)

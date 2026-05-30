@@ -11,18 +11,18 @@ Use this skill to search and download publication-friendly SVG icon assets into 
 
 ## Quick Start
 
-Resolve `scripts/icons.py` relative to this skill directory.
+Resolve `scripts/icons.py` relative to this skill directory and run it with the target project as the working directory so output files land in that project.
 
 ```bash
-scripts/icons.py --list-presets
-scripts/icons.py --preset gene --out gene_icons
-scripts/icons.py --provider bioicons --preset antibody oncology --out bioicons_set
-scripts/icons.py --provider tabler --preset flow chart safety --out flow_icons
-scripts/icons.py --provider all --search "antibody" --limit 20
-scripts/icons.py --provider bioicons --search "immune cell" --limit 20
-scripts/icons.py --provider tabler --search "warning" --download-search 5 --out warning_icons
-scripts/icons.py --provider bioicons --search "microscope" --download-search 6 --out microscope_icons
-scripts/icons.py --icons bioicons:DNA_double_helix mdi:dna lucide:dna --out selected_icons
+python3 /path/to/skills/icons/scripts/icons.py --list-presets
+python3 /path/to/skills/icons/scripts/icons.py --provider bioicons --preset gene --out gene_icons
+python3 /path/to/skills/icons/scripts/icons.py --provider bioicons --preset antibody oncology --out bioicons_set
+python3 /path/to/skills/icons/scripts/icons.py --provider tabler --preset flow chart safety --out flow_icons
+python3 /path/to/skills/icons/scripts/icons.py --provider all --search "antibody" --limit 20
+python3 /path/to/skills/icons/scripts/icons.py --provider bioicons --search "immune cell" --limit 20
+python3 /path/to/skills/icons/scripts/icons.py --provider tabler --search "warning" --download-search 5 --out warning_icons
+python3 /path/to/skills/icons/scripts/icons.py --provider bioicons --search "microscope" --download-search 6 --out microscope_icons
+python3 /path/to/skills/icons/scripts/icons.py --icons bioicons:DNA_double_helix mdi:dna lucide:dna --out selected_icons
 ```
 
 The script writes SVG files, `LICENSES.tsv`, and `preview.html`.
@@ -42,17 +42,17 @@ The script writes SVG files, `LICENSES.tsv`, and `preview.html`.
 2. Search before downloading when the concept is specific:
 
 ```bash
-scripts/icons.py --provider bioicons --search "fibroblast" --search "single cell" --limit 20
+python3 /path/to/skills/icons/scripts/icons.py --provider bioicons --search "fibroblast" --search "single cell" --limit 20
 ```
 
 3. Download reviewed candidates explicitly:
 
 ```bash
-scripts/icons.py --bioicons fibroblast-1 fibroblast-2 DNA_double_helix --out figure_icons
-scripts/icons.py --icons tabler:alert-triangle tabler:target tabler:chart-bar --out flow_icons
+python3 /path/to/skills/icons/scripts/icons.py --bioicons fibroblast-1 fibroblast-2 DNA_double_helix --out figure_icons
+python3 /path/to/skills/icons/scripts/icons.py --icons tabler:alert-triangle tabler:target tabler:chart-bar --out flow_icons
 ```
 
-4. Use `--download-search N` only for exploration. Search results can include visually inconsistent or semantically loose matches.
+4. Use `--download-search N` only for exploration. It downloads N total candidates from the printed search results in provider priority order. Search results can include visually inconsistent or semantically loose matches.
 5. Open or mention `preview.html` so the user can inspect the downloaded set.
 
 ## Svg/icons CLI
@@ -60,8 +60,8 @@ scripts/icons.py --icons tabler:alert-triangle tabler:target tabler:chart-bar --
 If `svgicons` is installed, use it for prompt-style recommendation:
 
 ```bash
-scripts/icons.py --recommend "biomedical workflow with DNA, antibody, immune cell, cancer cell and validation icons" --limit 12
-scripts/icons.py --pick "microscope" --out icons
+python3 /path/to/skills/icons/scripts/icons.py --recommend "biomedical workflow with DNA, antibody, immune cell, cancer cell and validation icons" --limit 12
+python3 /path/to/skills/icons/scripts/icons.py --pick "microscope" --out icons
 ```
 
 If the command fails because the CLI is missing, tell the user to install it with `npm install -g @svgicons-com/cli`. If raw SVG download, collections, exports, or license manifests require Pro access, state that clearly.

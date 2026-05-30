@@ -46,20 +46,24 @@ Use $icons to search BioIcons for microscope and single-cell assets.
 
 ## Command Line
 
-Run the script from the skill directory:
+Run the script from the project directory where you want the icon files:
 
 ```bash
-scripts/icons.py --list-presets
-scripts/icons.py --preset gene --out gene_icons
-scripts/icons.py --provider bioicons --preset antibody oncology --out bioicons_set
-scripts/icons.py --provider tabler --preset flow chart safety --out flow_icons
-scripts/icons.py --provider all --search "antibody" --limit 20
-scripts/icons.py --provider bioicons --search "immune cell" --limit 20
-scripts/icons.py --provider tabler --search "warning" --download-search 5 --out warning_icons
-scripts/icons.py --icons bioicons:DNA_double_helix mdi:dna lucide:dna --out selected_icons
+ICONS_SCRIPT="${CODEX_HOME:-$HOME/.codex}/skills/icons/scripts/icons.py"
+
+python3 "$ICONS_SCRIPT" --list-presets
+python3 "$ICONS_SCRIPT" --provider bioicons --preset gene --out gene_icons
+python3 "$ICONS_SCRIPT" --provider bioicons --preset antibody oncology --out bioicons_set
+python3 "$ICONS_SCRIPT" --provider tabler --preset flow chart safety --out flow_icons
+python3 "$ICONS_SCRIPT" --provider all --search "antibody" --limit 20
+python3 "$ICONS_SCRIPT" --provider bioicons --search "immune cell" --limit 20
+python3 "$ICONS_SCRIPT" --provider tabler --search "warning" --download-search 5 --out warning_icons
+python3 "$ICONS_SCRIPT" --icons bioicons:DNA_double_helix mdi:dna lucide:dna --out selected_icons
 ```
 
 The script requires Python 3 and network access.
+`--download-search N` downloads N total candidates from the printed search
+results in provider priority order.
 
 ## Providers
 
@@ -114,8 +118,8 @@ The optional Svg/icons CLI can be used for prompt-style recommendations:
 
 ```bash
 npm install -g @svgicons-com/cli
-scripts/icons.py --recommend "biomedical workflow with DNA, antibody, immune cell, cancer cell and validation icons" --limit 12
-scripts/icons.py --pick "microscope" --out icons
+python3 "$ICONS_SCRIPT" --recommend "biomedical workflow with DNA, antibody, immune cell, cancer cell and validation icons" --limit 12
+python3 "$ICONS_SCRIPT" --pick "microscope" --out icons
 ```
 
 Raw SVG downloads, collections, exports, or license manifests may require Svg/icons

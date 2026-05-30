@@ -43,6 +43,19 @@ class IconsScriptTests(unittest.TestCase):
         with patch.object(icons, "tabler_icon_names", return_value=["alert-triangle", "chart-bar", "bell"]):
             self.assertEqual(icons.search_tabler("warning", 3)[0], "tabler:alert-triangle")
 
+    def test_download_search_limit_is_total_not_per_provider(self) -> None:
+        candidates = [
+            ("bioicons", "antibody"),
+            ("bioicons", "antibody-1"),
+            ("iconify", "pinhead:antibody"),
+            ("iconify", "healthicons:antibody"),
+        ]
+
+        selected_bioicons, selected_iconify = icons.split_download_candidates(candidates, 2)
+
+        self.assertEqual(selected_bioicons, ["antibody", "antibody-1"])
+        self.assertEqual(selected_iconify, [])
+
     def test_write_licenses(self) -> None:
         item = icons.DownloadedIcon(
             provider="bioicons",
