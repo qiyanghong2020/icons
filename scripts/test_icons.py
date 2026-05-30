@@ -36,12 +36,49 @@ class IconsScriptTests(unittest.TestCase):
 
         results = icons.search_bioicons("immune cell", 5, entries)
 
-        self.assertIn("nk-cell", results[:2])
-        self.assertIn("antibody", results)
+        self.assertEqual(results, ["nk-cell"])
+
+    def test_bioicons_search_understands_chinese_terms(self) -> None:
+        entries = {
+            "DNA_symbolic_extending": {"category": "genomics", "license": "cc-0", "author": "BioIcons"},
+            "CRISPR_Cas9": {"category": "genomics", "license": "cc-0", "author": "BioIcons"},
+            "antibody": {"category": "blood immunology", "license": "cc-0", "author": "BioIcons"},
+            "5-methylcytosine": {"category": "epigenetics", "license": "cc-0", "author": "BioIcons"},
+        }
+
+        self.assertEqual(icons.search_bioicons("基因", 2, entries), ["DNA_symbolic_extending", "CRISPR_Cas9"])
+        self.assertEqual(icons.search_bioicons("抗体", 1, entries), ["antibody"])
+        self.assertEqual(icons.search_bioicons("甲基化", 1, entries), ["5-methylcytosine"])
+
+    def test_bioicons_prefers_specific_cell_type_aliases(self) -> None:
+        entries = {
+            "t_cell_receptor": {"category": "blood immunology", "license": "cc-0", "author": "BioIcons"},
+            "t_cell_receptor_ok": {"category": "blood immunology", "license": "cc-0", "author": "BioIcons"},
+            "4_cell_stage": {"category": "embryology", "license": "cc-0", "author": "BioIcons"},
+            "Photoreceptor_cell": {"category": "neuroscience", "license": "cc-0", "author": "BioIcons"},
+        }
+
+        self.assertEqual(icons.search_bioicons("T cell", 5, entries), ["t_cell_receptor", "t_cell_receptor_ok"])
+
+    def test_plot_queries_return_notice_instead_of_loose_bioicons(self) -> None:
+        entries = {
+            "density-plot": {"category": "plots", "license": "cc-0", "author": "BioIcons"},
+            "qPCR_plot": {"category": "plots", "license": "cc-0", "author": "BioIcons"},
+        }
+
+        self.assertEqual(icons.search_bioicons("Kaplan-Meier", 5, entries), [])
+        self.assertIn("data plots", icons.query_notice("生存曲线"))
 
     def test_tabler_search_uses_aliases(self) -> None:
         with patch.object(icons, "tabler_icon_names", return_value=["alert-triangle", "chart-bar", "bell"]):
             self.assertEqual(icons.search_tabler("warning", 3)[0], "tabler:alert-triangle")
+
+    def test_tabler_search_understands_chinese_aliases(self) -> None:
+        names = ["alert-triangle", "circle-check", "clipboard-check", "chart-bar"]
+        with patch.object(icons, "tabler_icon_names", return_value=names):
+            self.assertEqual(icons.search_tabler("警告", 3)[0], "tabler:alert-triangle")
+            self.assertEqual(icons.search_tabler("验证", 3)[0], "tabler:circle-check")
+            self.assertEqual(icons.search_tabler("柱状图", 3)[0], "tabler:chart-bar")
 
     def test_download_search_limit_is_total_not_per_provider(self) -> None:
         candidates = [

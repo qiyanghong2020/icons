@@ -138,19 +138,45 @@ TABLER_PRESETS = {
 
 TABLER_QUERY_ALIASES = {
     "warning": ["alert", "alert-triangle", "exclamation-circle"],
+    "警告": ["alert", "alert-triangle", "exclamation-circle"],
     "danger": ["alert", "alert-triangle", "shield-x"],
     "error": ["alert", "exclamation-circle", "circle-x"],
     "success": ["circle-check", "check"],
+    "validation": ["circle-check", "checks", "clipboard-check"],
+    "validate": ["circle-check", "checks", "clipboard-check"],
+    "验证": ["circle-check", "checks", "clipboard-check"],
     "target": ["target", "focus"],
+    "靶点": ["target", "focus"],
     "bar chart": ["chart-bar"],
+    "柱状图": ["chart-bar"],
     "line chart": ["chart-line"],
+    "折线图": ["chart-line"],
     "scatter": ["chart-scatter"],
+    "散点图": ["chart-scatter"],
     "clipboard": ["clipboard", "copy"],
+    "剪贴板": ["clipboard", "copy"],
+    "search": ["search"],
+    "搜索": ["search"],
+    "settings": ["settings"],
+    "设置": ["settings"],
+    "download": ["download"],
+    "下载": ["download"],
+    "pipeline": ["pipeline", "route", "git-branch"],
+    "流程": ["pipeline", "route", "git-branch"],
+    "pathway": ["route", "git-branch", "network"],
+    "通路": ["route", "git-branch", "network"],
     "flask": ["flask", "test-pipe"],
     "lab": ["flask", "microscope", "test-pipe"],
+    "实验": ["flask", "microscope", "test-pipe"],
 }
 
 BIOICONS_QUERY_ALIASES = {
+    "gene": ["DNA", "DNA double helix", "DNA symbolic", "chromosome", "plasmid"],
+    "genomics": ["DNA", "DNA double helix", "chromosome", "genome sequencer"],
+    "基因": ["DNA", "DNA double helix", "DNA symbolic", "chromosome", "plasmid"],
+    "基因组": ["DNA", "DNA double helix", "chromosome", "genome sequencer"],
+    "cell": ["Animal cell", "simple cell", "cell group"],
+    "细胞": ["Animal cell", "simple cell", "cell group"],
     "immune": ["antibody", "immunoglobulin", "nk-cell", "dendritic-cell", "blood immunology"],
     "immune cell": [
         "nk-cell",
@@ -161,20 +187,88 @@ BIOICONS_QUERY_ALIASES = {
         "blood immunology",
         "antibody",
     ],
+    "免疫": ["antibody", "immunoglobulin", "nk-cell", "dendritic-cell", "blood immunology"],
+    "免疫细胞": [
+        "nk-cell",
+        "dendritic-cell",
+        "hematopoetic-stem-cell",
+        "lymphoid-stem-cell",
+        "myeloid-stem-cell",
+    ],
     "immunology": ["blood immunology", "antibody", "immunoglobulin", "nk-cell", "dendritic-cell"],
+    "t cell": ["t_cell_receptor", "t_cell_receptor_ok"],
+    "t-cell": ["t_cell_receptor", "t_cell_receptor_ok"],
+    "t细胞": ["t_cell_receptor", "t_cell_receptor_ok"],
+    "b cell": ["B-cell", "B-cell_cluster"],
+    "b-cell": ["B-cell", "B-cell_cluster"],
+    "b细胞": ["B-cell", "B-cell_cluster"],
+    "nk cell": ["nk-cell"],
+    "nk-cell": ["nk-cell"],
+    "nk细胞": ["nk-cell"],
+    "macrophage": ["macrophage"],
+    "巨噬细胞": ["macrophage"],
+    "dendritic cell": ["dendritic_cell", "dendritic-cell"],
+    "树突状细胞": ["dendritic_cell", "dendritic-cell"],
+    "antibody": ["antibody", "immunoglobulin"],
+    "抗体": ["antibody", "immunoglobulin"],
     "tumor cell": ["cancerous-cell", "tumor", "oncology"],
     "tumour cell": ["cancerous-cell", "tumor", "oncology"],
     "cancer cell": ["cancerous-cell", "tumor", "oncology"],
     "cancer": ["cancerous-cell", "tumor", "oncology"],
+    "癌细胞": ["cancerous-cell", "tumor", "oncology"],
+    "肿瘤细胞": ["cancerous-cell", "tumor", "oncology"],
+    "肿瘤": ["cancerous-cell", "tumor", "oncology"],
+    "fibroblast": ["fibroblast"],
+    "成纤维细胞": ["fibroblast"],
     "single cell": ["singlecell", "singlecell droplet", "singlecell clustering", "cell"],
     "single-cell": ["singlecell", "singlecell droplet", "singlecell clustering", "cell"],
+    "single cell sequencing": ["singlecell", "singlecell droplet", "singlecell clustering", "sequencing"],
+    "scRNA-seq": ["singlecell", "singlecell droplet", "singlecell clustering", "RNA sequencing"],
+    "scrna seq": ["singlecell", "singlecell droplet", "singlecell clustering", "RNA sequencing"],
+    "单细胞": ["singlecell", "singlecell droplet", "singlecell clustering", "cell"],
+    "单细胞测序": ["singlecell", "singlecell droplet", "singlecell clustering", "RNA sequencing"],
     "dna": ["DNA", "DNA double helix", "DNA symbolic", "nucleic acids"],
     "rna": ["rna", "tRNA", "mRNA", "nucleic acids"],
     "dna/rna": ["DNA", "rna", "tRNA", "mRNA", "nucleic acids"],
     "dna rna": ["DNA", "rna", "tRNA", "mRNA", "nucleic acids"],
+    "核酸": ["DNA", "rna", "tRNA", "mRNA", "nucleic acids"],
     "crispr": ["CRISPR", "CRISPR Cas9", "CRISPR plasmid"],
     "crispr cas9": ["CRISPR_Cas9", "CRISPR Cas9", "CRISPR plasmid"],
+    "基因编辑": ["CRISPR", "CRISPR Cas9", "CRISPR plasmid"],
+    "mutation": ["mutation", "CRISPR", "sequence histogram"],
+    "突变": ["mutation", "CRISPR", "sequence histogram"],
+    "rna-seq": ["library for RNA sequencing", "RNA sequencing", "rna"],
+    "rna seq": ["library for RNA sequencing", "RNA sequencing", "rna"],
+    "atac-seq": ["Tn5 chromatin ATAC", "Transposase Tn5 ATAC chromatin"],
+    "atac seq": ["Tn5 chromatin ATAC", "Transposase Tn5 ATAC chromatin"],
+    "sequencing": ["DNA sequencer", "genome sequencer", "sequencing flow cell", "Illumina sequencing"],
+    "测序": ["DNA sequencer", "genome sequencer", "sequencing flow cell", "Illumina sequencing"],
+    "methylation": ["5-methylcytosine", "5-hydroxymethylcytosine", "chromatin"],
+    "甲基化": ["5-methylcytosine", "5-hydroxymethylcytosine", "chromatin"],
+    "m6a": ["rna", "mRNA", "methylation"],
+    "m6a甲基化": ["rna", "mRNA", "methylation"],
+    "rna methylation": ["rna", "mRNA", "methylation"],
+    "epigenetics": ["single nucleosome", "chromatin histones", "5-methylcytosine"],
+    "表观遗传": ["single nucleosome", "chromatin histones", "5-methylcytosine"],
     "microscope": ["microscope", "electron microscope", "confocal microscope"],
+    "显微镜": ["microscope", "electron microscope", "confocal microscope"],
+    "virus": ["virus", "SARS-CoV-2", "phage", "influenza"],
+    "病毒": ["virus", "SARS-CoV-2", "phage", "influenza"],
+    "flow cytometry": ["flow-cytometer-cell-sorter"],
+    "流式": ["flow-cytometer-cell-sorter"],
+    "流式细胞术": ["flow-cytometer-cell-sorter"],
+    "western blot": ["western_blotting"],
+    "wb": ["western_blotting"],
+    "蛋白印迹": ["western_blotting"],
+    "qpcr": ["qpcr_machine", "qPCR_plot"],
+    "rt-qpcr": ["qpcr_machine", "qPCR_plot"],
+    "定量pcr": ["qpcr_machine", "qPCR_plot"],
+    "apoptosis": ["apoptosis"],
+    "凋亡": ["apoptosis"],
+    "proliferation": ["Mitosis", "cell cycle", "cell"],
+    "增殖": ["Mitosis", "cell cycle", "cell"],
+    "heatmap": ["heatmap", "heatmap symmetrical"],
+    "热图": ["heatmap", "heatmap symmetrical"],
 }
 
 BIOICONS_PRESETS = {
@@ -262,6 +356,98 @@ BIOICONS_PRESETS = {
     ],
 }
 
+BIOICONS_PREFERRED_RESULTS = {
+    "gene": BIOICONS_PRESETS["gene"],
+    "基因": BIOICONS_PRESETS["gene"],
+    "cell": BIOICONS_PRESETS["cell"],
+    "细胞": BIOICONS_PRESETS["cell"],
+    "immune cell": ["nk-cell", "dendritic_cell", "dendritic-cell-1", "hematopoetic-stem-cell", "lymphoid-stem-cell"],
+    "免疫细胞": ["nk-cell", "dendritic_cell", "dendritic-cell-1", "hematopoetic-stem-cell", "lymphoid-stem-cell"],
+    "t cell": ["t_cell_receptor", "t_cell_receptor_ok"],
+    "t-cell": ["t_cell_receptor", "t_cell_receptor_ok"],
+    "t细胞": ["t_cell_receptor", "t_cell_receptor_ok"],
+    "b cell": ["B-cell_1", "B-cell_2", "B-cell_3", "B-cell_4", "B-cell_5", "B-cell_cluster"],
+    "b-cell": ["B-cell_1", "B-cell_2", "B-cell_3", "B-cell_4", "B-cell_5", "B-cell_cluster"],
+    "b细胞": ["B-cell_1", "B-cell_2", "B-cell_3", "B-cell_4", "B-cell_5", "B-cell_cluster"],
+    "nk cell": ["nk-cell"],
+    "nk-cell": ["nk-cell"],
+    "nk细胞": ["nk-cell"],
+    "antibody": BIOICONS_PRESETS["antibody"],
+    "抗体": BIOICONS_PRESETS["antibody"],
+    "mutation": BIOICONS_PRESETS["mutation"],
+    "突变": BIOICONS_PRESETS["mutation"],
+    "cancer cell": ["cancer_cell", "tumor", "cancerous-cell-1", "cancerous-cell-2", "cancerous-cell-3"],
+    "tumor cell": ["tumor", "cancer_cell", "cancerous-cell-1", "cancerous-cell-2", "cancerous-cell-3"],
+    "癌细胞": ["cancer_cell", "tumor", "cancerous-cell-1", "cancerous-cell-2", "cancerous-cell-3"],
+    "肿瘤细胞": ["tumor", "cancer_cell", "cancerous-cell-1", "cancerous-cell-2", "cancerous-cell-3"],
+    "fibroblast": ["fibroblast-1", "fibroblast-2", "fibroblast-3", "fibroblast-4", "fibroblast-5"],
+    "成纤维细胞": ["fibroblast-1", "fibroblast-2", "fibroblast-3", "fibroblast-4", "fibroblast-5"],
+    "single cell": ["SingleCell_Clustering_DataReduction_UMAP", "singlecell_droplet_overloading"],
+    "single-cell": ["SingleCell_Clustering_DataReduction_UMAP", "singlecell_droplet_overloading"],
+    "单细胞": ["SingleCell_Clustering_DataReduction_UMAP", "singlecell_droplet_overloading"],
+    "scrna-seq": ["SingleCell_Clustering_DataReduction_UMAP", "singlecell_droplet_overloading", "library_for_RNA_sequencing"],
+    "scrna seq": ["SingleCell_Clustering_DataReduction_UMAP", "singlecell_droplet_overloading", "library_for_RNA_sequencing"],
+    "单细胞测序": ["SingleCell_Clustering_DataReduction_UMAP", "singlecell_droplet_overloading", "library_for_RNA_sequencing"],
+    "methylation": ["5-methylcytosine", "5-hydroxymethylcytosine"],
+    "甲基化": ["5-methylcytosine", "5-hydroxymethylcytosine"],
+    "epigenetics": ["single_nucleosome", "chromatin-histones", "Chromatin_structure", "5-methylcytosine"],
+    "表观遗传": ["single_nucleosome", "chromatin-histones", "Chromatin_structure", "5-methylcytosine"],
+    "sequencing": ["DNA_sequencer", "genomesequencer-1", "Sequencing_flow_cell_(4_colour)", "Illumina_sequencing_reads"],
+    "测序": ["DNA_sequencer", "genomesequencer-1", "Sequencing_flow_cell_(4_colour)", "Illumina_sequencing_reads"],
+    "rna-seq": ["library_for_RNA_sequencing", "rna", "RNA_bulge"],
+    "rna seq": ["library_for_RNA_sequencing", "rna", "RNA_bulge"],
+    "atac-seq": ["Tn5_chromatin_ATAC", "Transposase_Tn5_ATAC_chromatin"],
+    "atac seq": ["Tn5_chromatin_ATAC", "Transposase_Tn5_ATAC_chromatin"],
+    "flow cytometry": ["flow-cytometer-cell-sorter"],
+    "流式": ["flow-cytometer-cell-sorter"],
+    "流式细胞术": ["flow-cytometer-cell-sorter"],
+    "western blot": ["western_blotting"],
+    "wb": ["western_blotting"],
+    "qpcr": ["qpcr_machine", "qPCR_plot"],
+    "rt-qpcr": ["qpcr_machine", "qPCR_plot"],
+    "apoptosis": ["apoptosis", "apoptosis_2"],
+    "凋亡": ["apoptosis", "apoptosis_2"],
+    "proliferation": ["Mitosis"],
+    "增殖": ["Mitosis"],
+    "microscope": BIOICONS_PRESETS["lab"][:4],
+    "显微镜": BIOICONS_PRESETS["lab"][:4],
+    "virus": BIOICONS_PRESETS["virus"],
+    "病毒": BIOICONS_PRESETS["virus"],
+    "heatmap": ["heatmap", "heatmap_symmetrical", "calendar-heatmap"],
+    "热图": ["heatmap", "heatmap_symmetrical", "calendar-heatmap"],
+}
+
+ICONIFY_QUERY_ALIASES = {
+    "基因": ["gene", "dna"],
+    "细胞": ["cell"],
+    "免疫细胞": ["immune cell"],
+    "抗体": ["antibody"],
+    "癌细胞": ["cancer cell"],
+    "肿瘤细胞": ["tumor cell"],
+    "显微镜": ["microscope"],
+    "病毒": ["virus"],
+    "突变": ["mutation"],
+    "测序": ["sequencing"],
+    "单细胞": ["single cell"],
+    "警告": ["warning"],
+    "靶点": ["target"],
+    "柱状图": ["bar chart"],
+    "验证": ["validation", "check"],
+    "通路": ["pathway"],
+}
+
+PLOT_QUERY_NOTICES = {
+    "kaplan-meier": "Kaplan-Meier and survival curves are data plots, not reusable icons. Prefer a plotting workflow; use chart icons only as generic placeholders.",
+    "kaplan meier": "Kaplan-Meier and survival curves are data plots, not reusable icons. Prefer a plotting workflow; use chart icons only as generic placeholders.",
+    "survival": "Survival analysis is usually a data plot, not a standalone icon. Prefer a plotting workflow; use chart icons only as generic placeholders.",
+    "survival curve": "Survival curves are data plots, not reusable icons. Prefer a plotting workflow; use chart icons only as generic placeholders.",
+    "生存曲线": "Survival curves are data plots, not reusable icons. Prefer a plotting workflow; use chart icons only as generic placeholders.",
+    "forest plot": "Forest plots are data visualizations, not reusable icons. Prefer a plotting workflow; use chart icons only as generic placeholders.",
+    "森林图": "Forest plots are data visualizations, not reusable icons. Prefer a plotting workflow; use chart icons only as generic placeholders.",
+    "volcano plot": "Volcano plots are data visualizations, not reusable icons. Prefer a plotting workflow; use chart icons only as generic placeholders.",
+    "火山图": "Volcano plots are data visualizations, not reusable icons. Prefer a plotting workflow; use chart icons only as generic placeholders.",
+}
+
 LICENSE_URLS = {
     "bsd": "https://opensource.org/licenses/BSD-3-Clause",
     "cc-0": "https://creativecommons.org/publicdomain/zero/1.0/",
@@ -329,6 +515,28 @@ def normalize_text(value: str) -> str:
         .replace("(", " ")
         .replace(")", " ")
     )
+
+
+def query_keys(query: str) -> list[str]:
+    return unique_in_order([query, query.lower(), normalize_text(query)])
+
+
+def query_tokens(value: str) -> list[str]:
+    return [token for token in normalize_text(value).split() if len(token) > 1]
+
+
+def token_matches_text(token: str, text: str, words: list[str]) -> bool:
+    if len(token) <= 2:
+        return token in words
+    return token in text
+
+
+def query_notice(query: str) -> str:
+    for key in query_keys(query):
+        notice = PLOT_QUERY_NOTICES.get(key)
+        if notice:
+            return notice
+    return ""
 
 
 def unique_in_order(items: list[str]) -> list[str]:
@@ -406,10 +614,16 @@ def list_presets() -> None:
 
 
 def search_iconify(query: str, limit: int) -> list[str]:
-    encoded = urllib.parse.quote(query)
-    url = f"{ICONIFY_API_BASE}/search?query={encoded}&limit={limit}"
-    data = fetch_json(url)
-    return list(data.get("icons", []))
+    results: list[str] = []
+    for variant in expanded_query_variants(ICONIFY_QUERY_ALIASES, query):
+        encoded = urllib.parse.quote(variant)
+        url = f"{ICONIFY_API_BASE}/search?query={encoded}&limit={limit}"
+        data = fetch_json(url)
+        results.extend(data.get("icons", []))
+        results = unique_in_order(results)
+        if len(results) >= limit:
+            break
+    return results[:limit]
 
 
 def tabler_icon_names() -> list[str]:
@@ -418,25 +632,26 @@ def tabler_icon_names() -> list[str]:
 
 
 def expanded_query_variants(alias_map: dict[str, list[str]], query: str) -> list[str]:
-    normalized = normalize_text(query)
     variants = [query]
-    variants.extend(alias_map.get(query.lower(), []))
-    variants.extend(alias_map.get(normalized, []))
+    for key in query_keys(query):
+        variants.extend(alias_map.get(key, []))
     return unique_in_order([variant for variant in variants if variant])
 
 
 def score_name_against_query(name: str, query: str) -> int:
-    tokens = [token for token in normalize_text(query).split() if token]
-    if not tokens:
-        return 0
     normalized_name = normalize_text(name)
-    if not all(token in normalized_name for token in tokens):
-        return 0
-    score = sum(10 if token in normalized_name.split() else 4 for token in tokens)
-    if normalized_name == normalize_text(query):
+    normalized_query = normalize_text(query)
+    score = 0
+    if normalized_name == normalized_query:
         score += 50
-    if normalized_name.startswith(normalize_text(query)):
+    if normalized_name.startswith(normalized_query):
         score += 15
+    tokens = query_tokens(query)
+    if not tokens:
+        return score
+    if not all(token in normalized_name for token in tokens):
+        return score
+    score += sum(10 if token in normalized_name.split() else 4 for token in tokens)
     return score
 
 
@@ -541,12 +756,9 @@ def bioicons_page_url(icon: str) -> str:
 
 
 def score_bioicons_entry(name: str, entry: dict, query: str, require_all_tokens: bool = True) -> int:
-    tokens = [token for token in normalize_text(query).split() if token]
-    if not tokens:
-        return 0
-
     normalized_name = normalize_text(name)
     normalized_category = normalize_text(entry.get("category", ""))
+    normalized_query = normalize_text(query)
     haystack = normalize_text(
         " ".join(
             [
@@ -558,40 +770,52 @@ def score_bioicons_entry(name: str, entry: dict, query: str, require_all_tokens:
         )
     )
 
-    if require_all_tokens and not all(token in haystack for token in tokens):
-        return 0
-    if not require_all_tokens and not any(token in haystack for token in tokens):
-        return 0
-
     score = 0
+    if normalized_name == normalized_query:
+        score += 80
+    if normalized_name.startswith(normalized_query):
+        score += 30
+    if normalized_category == normalized_query:
+        score += 15
+
+    tokens = query_tokens(query)
+    if not tokens:
+        return score
+
+    haystack_words = haystack.split()
+    if require_all_tokens and not all(token_matches_text(token, haystack, haystack_words) for token in tokens):
+        return score
+    if not require_all_tokens and not any(token_matches_text(token, haystack, haystack_words) for token in tokens):
+        return score
+
     name_words = normalized_name.split()
     category_words = normalized_category.split()
     for token in tokens:
         if token in name_words:
             score += 18
-        elif token in normalized_name:
+        elif token_matches_text(token, normalized_name, name_words):
             score += 10
         if token in category_words:
             score += 7
-        elif token in normalized_category:
+        elif token_matches_text(token, normalized_category, category_words):
             score += 4
-        elif token in haystack:
+        elif token_matches_text(token, haystack, haystack_words):
             score += 1
 
-    normalized_query = normalize_text(query)
-    if normalized_name == normalized_query:
-        score += 60
-    if normalized_name.startswith(normalized_query):
-        score += 25
-    if normalized_category == normalized_query:
-        score += 15
     return score
 
 
 def search_bioicons(query: str, limit: int, entries_by_name: dict[str, dict] | None = None) -> list[str]:
+    if query_notice(query):
+        return []
     entries_by_name = entries_by_name or bioicons_entry_map()
     query_variants = expanded_query_variants(BIOICONS_QUERY_ALIASES, query)
+    preferred_names = expanded_query_variants(BIOICONS_PREFERRED_RESULTS, query)[1:]
+    preferred_available = [name for name in preferred_names if name in entries_by_name]
+    if preferred_available:
+        return preferred_available[:limit]
     scored: list[tuple[int, str]] = []
+
     for name, entry in entries_by_name.items():
         score = max(score_bioicons_entry(name, entry, variant) for variant in query_variants)
         if not score:
@@ -666,6 +890,11 @@ def print_search_results(
     entries_by_name = bioicons_entry_map() if "bioicons" in providers else {}
 
     for query in queries:
+        notice = query_notice(query)
+        if notice:
+            print(f"\n## Note: {query}")
+            print(notice)
+
         if "bioicons" in providers:
             results = search_bioicons(query, limit, entries_by_name)
             bioicons_results.extend(results)

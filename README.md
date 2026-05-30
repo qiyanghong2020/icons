@@ -42,6 +42,7 @@ Example prompts:
 Use $icons to download DNA, antibody, and tumor-cell SVG icons.
 Use $icons to find consistent flowchart icons for warnings, targets, and charts.
 Use $icons to search BioIcons for microscope and single-cell assets.
+Use $icons to search Chinese terms such as 抗体, 免疫细胞, 癌细胞, 甲基化, or 警告.
 ```
 
 ## Command Line
@@ -56,7 +57,9 @@ python3 "$ICONS_SCRIPT" --provider bioicons --preset gene --out gene_icons
 python3 "$ICONS_SCRIPT" --provider bioicons --preset antibody oncology --out bioicons_set
 python3 "$ICONS_SCRIPT" --provider tabler --preset flow chart safety --out flow_icons
 python3 "$ICONS_SCRIPT" --provider all --search "antibody" --limit 20
+python3 "$ICONS_SCRIPT" --provider bioicons --search "抗体" --limit 10
 python3 "$ICONS_SCRIPT" --provider bioicons --search "immune cell" --limit 20
+python3 "$ICONS_SCRIPT" --provider bioicons --search "scRNA-seq" --limit 10
 python3 "$ICONS_SCRIPT" --provider tabler --search "warning" --download-search 5 --out warning_icons
 python3 "$ICONS_SCRIPT" --icons bioicons:DNA_double_helix mdi:dna lucide:dna --out selected_icons
 ```
@@ -64,6 +67,10 @@ python3 "$ICONS_SCRIPT" --icons bioicons:DNA_double_helix mdi:dna lucide:dna --o
 The script requires Python 3 and network access.
 `--download-search N` downloads N total candidates from the printed search
 results in provider priority order.
+Search understands common Chinese biomedical terms and scientific abbreviations,
+including `抗体`, `免疫细胞`, `癌细胞`, `甲基化`, `scRNA-seq`, `RNA-seq`, and
+`ATAC-seq`. Plot terms such as Kaplan-Meier, forest plot, and volcano plot print
+a reminder that they are better handled with plotting tools.
 
 ## Providers
 

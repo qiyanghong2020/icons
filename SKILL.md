@@ -1,6 +1,6 @@
 ---
 name: icons
-description: Find, preview, and download editable SVG icons for biomedical, scientific, flowchart, and UI diagrams from BioIcons, Tabler Icons, Iconify, and optional Svg/icons CLI. Use when Codex needs icon assets for genes, DNA/RNA, cells, antibodies, immune cells, cancer, mutations, viruses, laboratory equipment, pathways, mechanisms, warnings, targets, charts, shields, clipboards, thesis figures, papers, posters, presentations, or UI diagrams, especially when the user wants reusable local SVG files plus license/provenance metadata.
+description: Find, preview, and download editable SVG icons for biomedical, scientific, flowchart, and UI diagrams from BioIcons, Tabler Icons, Iconify, and optional Svg/icons CLI. Use when Codex needs icon assets for English or Chinese biomedical keywords such as genes, DNA/RNA, cells, antibodies, immune cells, cancer, mutations, viruses, lab equipment, pathways, mechanisms, warnings, targets, charts, shields, clipboards, thesis figures, papers, posters, presentations, or UI diagrams, especially when the user wants reusable local SVG files plus license/provenance metadata.
 ---
 
 # Icons
@@ -19,7 +19,9 @@ python3 /path/to/skills/icons/scripts/icons.py --provider bioicons --preset gene
 python3 /path/to/skills/icons/scripts/icons.py --provider bioicons --preset antibody oncology --out bioicons_set
 python3 /path/to/skills/icons/scripts/icons.py --provider tabler --preset flow chart safety --out flow_icons
 python3 /path/to/skills/icons/scripts/icons.py --provider all --search "antibody" --limit 20
+python3 /path/to/skills/icons/scripts/icons.py --provider bioicons --search "抗体" --limit 10
 python3 /path/to/skills/icons/scripts/icons.py --provider bioicons --search "immune cell" --limit 20
+python3 /path/to/skills/icons/scripts/icons.py --provider bioicons --search "scRNA-seq" --limit 10
 python3 /path/to/skills/icons/scripts/icons.py --provider tabler --search "warning" --download-search 5 --out warning_icons
 python3 /path/to/skills/icons/scripts/icons.py --provider bioicons --search "microscope" --download-search 6 --out microscope_icons
 python3 /path/to/skills/icons/scripts/icons.py --icons bioicons:DNA_double_helix mdi:dna lucide:dna --out selected_icons
@@ -39,7 +41,7 @@ The script writes SVG files, `LICENSES.tsv`, and `preview.html`.
 ## Workflow
 
 1. Start with a preset when the request matches one: `gene`, `dna`, `cell`, `mutation`, `virus`, `lab`, `antibody`, `oncology`, `flow`, `ui`, `chart`, `lab-linear`, or `safety`.
-2. Search before downloading when the concept is specific:
+2. Search before downloading when the concept is specific. English, common Chinese terms, and scientific abbreviations are supported, including `抗体`, `免疫细胞`, `癌细胞`, `甲基化`, `scRNA-seq`, `RNA-seq`, and `ATAC-seq`:
 
 ```bash
 python3 /path/to/skills/icons/scripts/icons.py --provider bioicons --search "fibroblast" --search "single cell" --limit 20
@@ -54,6 +56,7 @@ python3 /path/to/skills/icons/scripts/icons.py --icons tabler:alert-triangle tab
 
 4. Use `--download-search N` only for exploration. It downloads N total candidates from the printed search results in provider priority order. Search results can include visually inconsistent or semantically loose matches.
 5. Open or mention `preview.html` so the user can inspect the downloaded set.
+6. If a query is a data plot concept such as Kaplan-Meier, forest plot, or volcano plot, prefer a plotting workflow rather than downloading an icon placeholder.
 
 ## Svg/icons CLI
 

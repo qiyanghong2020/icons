@@ -1,4 +1,4 @@
 interface:
   display_name: "Icons"
   short_description: "Download science SVG icons"
-  default_prompt: "Use $icons to find and download editable BioIcons, Tabler, or Iconify SVG assets with license metadata."
+  default_prompt: "Use $icons to find and download editable BioIcons, Tabler, or Iconify SVG assets from English or Chinese keywords with license metadata."
