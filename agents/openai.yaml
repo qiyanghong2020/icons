@@ -1,0 +1,4 @@
+interface:
+  display_name: "Icons"
+  short_description: "Download science SVG icons"
+  default_prompt: "Use $icons to find and download editable BioIcons/Iconify SVG assets with license metadata."
