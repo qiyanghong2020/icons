@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Search and download science-friendly SVG icons from Iconify and BioIcons."""
+"""Search and download science-friendly SVG icons from BioIcons, Iconify, and Tabler."""
 
 from __future__ import annotations
 
@@ -74,6 +74,77 @@ ICONIFY_PRESETS = {
         "healthicons:test-tubes",
         "healthicons:test-tubes-outline",
     ],
+}
+
+TABLER_PRESETS = {
+    "flow": [
+        "tabler:arrow-right",
+        "tabler:arrow-down",
+        "tabler:git-branch",
+        "tabler:route",
+        "tabler:target",
+        "tabler:circle-check",
+        "tabler:alert-triangle",
+        "tabler:info-circle",
+        "tabler:ban",
+        "tabler:loader-2",
+    ],
+    "ui": [
+        "tabler:search",
+        "tabler:settings",
+        "tabler:filter",
+        "tabler:download",
+        "tabler:upload",
+        "tabler:copy",
+        "tabler:clipboard",
+        "tabler:edit",
+        "tabler:trash",
+        "tabler:plus",
+    ],
+    "chart": [
+        "tabler:chart-bar",
+        "tabler:chart-line",
+        "tabler:chart-pie",
+        "tabler:chart-scatter",
+        "tabler:timeline",
+        "tabler:table",
+        "tabler:percentage",
+        "tabler:sum",
+    ],
+    "lab-linear": [
+        "tabler:flask",
+        "tabler:microscope",
+        "tabler:test-pipe",
+        "tabler:vaccine",
+        "tabler:dna",
+        "tabler:cell",
+        "tabler:stethoscope",
+        "tabler:heart",
+    ],
+    "safety": [
+        "tabler:alert-triangle",
+        "tabler:exclamation-circle",
+        "tabler:shield",
+        "tabler:shield-check",
+        "tabler:shield-x",
+        "tabler:lock",
+        "tabler:biohazard",
+        "tabler:radioactive",
+    ],
+}
+
+TABLER_QUERY_ALIASES = {
+    "warning": ["alert", "alert-triangle", "exclamation-circle"],
+    "danger": ["alert", "alert-triangle", "shield-x"],
+    "error": ["alert", "exclamation-circle", "circle-x"],
+    "success": ["circle-check", "check"],
+    "target": ["target", "focus"],
+    "bar chart": ["chart-bar"],
+    "line chart": ["chart-line"],
+    "scatter": ["chart-scatter"],
+    "clipboard": ["clipboard", "copy"],
+    "flask": ["flask", "test-pipe"],
+    "lab": ["flask", "microscope", "test-pipe"],
 }
 
 BIOICONS_PRESETS = {
@@ -245,9 +316,9 @@ def bioicons_file_name(icon: str) -> str:
 
 def provider_set(provider: str) -> set[str]:
     if provider == "all":
-        return {"bioicons", "iconify", "svgicons"}
+        return {"bioicons", "iconify", "tabler", "svgicons"}
     if provider == "auto":
-        return {"bioicons", "iconify"}
+        return {"bioicons", "tabler", "iconify"}
     return {provider}
 
 
@@ -260,6 +331,10 @@ def list_presets() -> None:
     for preset, icons in sorted(ICONIFY_PRESETS.items()):
         print(f"\n## {preset}")
         print("\n".join(icons))
+    print("\n# Tabler presets")
+    for preset, icons in sorted(TABLER_PRESETS.items()):
+        print(f"\n## {preset}")
+        print("\n".join(icons))
 
 
 def search_iconify(query: str, limit: int) -> list[str]:
@@ -267,6 +342,38 @@ def search_iconify(query: str, limit: int) -> list[str]:
     url = f"{ICONIFY_API_BASE}/search?query={encoded}&limit={limit}"
     data = fetch_json(url)
     return list(data.get("icons", []))
+
+
+def tabler_icon_names() -> list[str]:
+    data = fetch_json(f"{ICONIFY_API_BASE}/collection?prefix=tabler")
+    return list(data.get("uncategorized", []))
+
+
+def score_name_against_query(name: str, query: str) -> int:
+    tokens = [token for token in normalize_text(query).split() if token]
+    if not tokens:
+        return 0
+    normalized_name = normalize_text(name)
+    if not all(token in normalized_name for token in tokens):
+        return 0
+    score = sum(10 if token in normalized_name.split() else 4 for token in tokens)
+    if normalized_name == normalize_text(query):
+        score += 50
+    if normalized_name.startswith(normalize_text(query)):
+        score += 15
+    return score
+
+
+def search_tabler(query: str, limit: int) -> list[str]:
+    names = tabler_icon_names()
+    query_variants = [query, *TABLER_QUERY_ALIASES.get(query.lower(), [])]
+    scored: list[tuple[int, str]] = []
+    for name in names:
+        score = max(score_name_against_query(name, variant) for variant in query_variants)
+        if score:
+            scored.append((score, name))
+    scored.sort(key=lambda item: (-item[0], item[1]))
+    return [f"tabler:{name}" for _, name in scored[:limit]]
 
 
 def iconify_collection_info(prefixes: list[str]) -> dict:
@@ -455,6 +562,12 @@ def print_search_results(provider: str, queries: list[str], limit: int, anonymou
             print(f"\n## BioIcons: {query}")
             print("\n".join(f"bioicons:{icon}" for icon in results) if results else "(no results)")
 
+        if "tabler" in providers:
+            results = search_tabler(query, limit)
+            iconify_results.extend(results)
+            print(f"\n## Tabler: {query}")
+            print("\n".join(results) if results else "(no results)")
+
         if "iconify" in providers:
             results = search_iconify(query, limit)
             iconify_results.extend(results)
@@ -545,9 +658,9 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--provider",
-        choices=["auto", "bioicons", "iconify", "svgicons", "all"],
+        choices=["auto", "bioicons", "iconify", "tabler", "svgicons", "all"],
         default="auto",
-        help="Icon source. auto searches/downloads BioIcons then Iconify.",
+        help="Icon source. auto searches/downloads BioIcons, Tabler, then Iconify.",
     )
     parser.add_argument("--search", action="append", default=[], help="Search term. May be repeated.")
     parser.add_argument("--recommend", help="Use Svg/icons CLI to recommend icons for a brief.")
@@ -588,6 +701,9 @@ def main() -> int:
             known = False
             if "bioicons" in providers and preset in BIOICONS_PRESETS:
                 selected_bioicons.extend(BIOICONS_PRESETS[preset])
+                known = True
+            if "tabler" in providers and preset in TABLER_PRESETS:
+                selected_iconify.extend(TABLER_PRESETS[preset])
                 known = True
             if "iconify" in providers and preset in ICONIFY_PRESETS:
                 selected_iconify.extend(ICONIFY_PRESETS[preset])
