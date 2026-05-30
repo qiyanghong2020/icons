@@ -9,6 +9,7 @@ import json
 import shutil
 import subprocess
 import sys
+import time
 import urllib.parse
 import urllib.request
 from dataclasses import dataclass
@@ -20,6 +21,8 @@ BIOICONS_META_URL = f"{BIOICONS_RAW_BASE}/static/icons/icons.json"
 BIOICONS_AUTHORS_URL = f"{BIOICONS_RAW_BASE}/static/icons/authors.json"
 BIOICONS_TREE_URL = "https://api.github.com/repos/duerrsimon/bioicons/git/trees/main?recursive=1"
 USER_AGENT = "Codex icons skill"
+CACHE_DIR = Path.home() / ".cache" / "icons-skill"
+CACHE_TTL_SECONDS = 24 * 60 * 60
 
 ICONIFY_PRESETS = {
     "cell": [
@@ -147,6 +150,33 @@ TABLER_QUERY_ALIASES = {
     "lab": ["flask", "microscope", "test-pipe"],
 }
 
+BIOICONS_QUERY_ALIASES = {
+    "immune": ["antibody", "immunoglobulin", "nk-cell", "dendritic-cell", "blood immunology"],
+    "immune cell": [
+        "nk-cell",
+        "dendritic-cell",
+        "hematopoetic-stem-cell",
+        "lymphoid-stem-cell",
+        "myeloid-stem-cell",
+        "blood immunology",
+        "antibody",
+    ],
+    "immunology": ["blood immunology", "antibody", "immunoglobulin", "nk-cell", "dendritic-cell"],
+    "tumor cell": ["cancerous-cell", "tumor", "oncology"],
+    "tumour cell": ["cancerous-cell", "tumor", "oncology"],
+    "cancer cell": ["cancerous-cell", "tumor", "oncology"],
+    "cancer": ["cancerous-cell", "tumor", "oncology"],
+    "single cell": ["singlecell", "singlecell droplet", "singlecell clustering", "cell"],
+    "single-cell": ["singlecell", "singlecell droplet", "singlecell clustering", "cell"],
+    "dna": ["DNA", "DNA double helix", "DNA symbolic", "nucleic acids"],
+    "rna": ["rna", "tRNA", "mRNA", "nucleic acids"],
+    "dna/rna": ["DNA", "rna", "tRNA", "mRNA", "nucleic acids"],
+    "dna rna": ["DNA", "rna", "tRNA", "mRNA", "nucleic acids"],
+    "crispr": ["CRISPR", "CRISPR Cas9", "CRISPR plasmid"],
+    "crispr cas9": ["CRISPR_Cas9", "CRISPR Cas9", "CRISPR plasmid"],
+    "microscope": ["microscope", "electron microscope", "confocal microscope"],
+}
+
 BIOICONS_PRESETS = {
     "cell": [
         "Animal_cell",
@@ -265,6 +295,31 @@ def fetch_json(url: str):
     return json.loads(fetch_bytes(url).decode("utf-8"))
 
 
+def read_cached_json(path: Path):
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+
+
+def fetch_json_cached(url: str, cache_name: str, ttl_seconds: int = CACHE_TTL_SECONDS):
+    path = CACHE_DIR / cache_name
+    cached = read_cached_json(path) if path.exists() else None
+    if cached is not None and time.time() - path.stat().st_mtime < ttl_seconds:
+        return cached
+
+    try:
+        data = fetch_json(url)
+    except Exception:
+        if cached is not None:
+            return cached
+        raise
+
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(data), encoding="utf-8")
+    return data
+
+
 def normalize_text(value: str) -> str:
     return (
         value.lower()
@@ -316,7 +371,10 @@ def bioicons_file_name(icon: str) -> str:
 
 def provider_set(provider: str) -> set[str]:
     if provider == "all":
-        return {"bioicons", "iconify", "tabler", "svgicons"}
+        providers = {"bioicons", "iconify", "tabler"}
+        if shutil.which("svgicons"):
+            providers.add("svgicons")
+        return providers
     if provider == "auto":
         return {"bioicons", "tabler", "iconify"}
     return {provider}
@@ -345,8 +403,16 @@ def search_iconify(query: str, limit: int) -> list[str]:
 
 
 def tabler_icon_names() -> list[str]:
-    data = fetch_json(f"{ICONIFY_API_BASE}/collection?prefix=tabler")
+    data = fetch_json_cached(f"{ICONIFY_API_BASE}/collection?prefix=tabler", "tabler-collection.json")
     return list(data.get("uncategorized", []))
+
+
+def expanded_query_variants(alias_map: dict[str, list[str]], query: str) -> list[str]:
+    normalized = normalize_text(query)
+    variants = [query]
+    variants.extend(alias_map.get(query.lower(), []))
+    variants.extend(alias_map.get(normalized, []))
+    return unique_in_order([variant for variant in variants if variant])
 
 
 def score_name_against_query(name: str, query: str) -> int:
@@ -366,7 +432,7 @@ def score_name_against_query(name: str, query: str) -> int:
 
 def search_tabler(query: str, limit: int) -> list[str]:
     names = tabler_icon_names()
-    query_variants = [query, *TABLER_QUERY_ALIASES.get(query.lower(), [])]
+    query_variants = expanded_query_variants(TABLER_QUERY_ALIASES, query)
     scored: list[tuple[int, str]] = []
     for name in names:
         score = max(score_name_against_query(name, variant) for variant in query_variants)
@@ -411,9 +477,9 @@ def download_iconify(icon: str, out_dir: Path, collections: dict) -> DownloadedI
 
 
 def bioicons_metadata() -> tuple[list[dict], dict[str, str], dict[str, str]]:
-    entries = fetch_json(BIOICONS_META_URL)
-    authors = fetch_json(BIOICONS_AUTHORS_URL)
-    tree = fetch_json(BIOICONS_TREE_URL)
+    entries = fetch_json_cached(BIOICONS_META_URL, "bioicons-icons.json")
+    authors = fetch_json_cached(BIOICONS_AUTHORS_URL, "bioicons-authors.json")
+    tree = fetch_json_cached(BIOICONS_TREE_URL, "bioicons-tree.json")
     paths_by_name: dict[str, str] = {}
     for item in tree.get("tree", []):
         path = item.get("path", "")
@@ -464,33 +530,64 @@ def bioicons_page_url(icon: str) -> str:
     return f"https://bioicons.com/icons/{urllib.parse.quote(icon)}"
 
 
+def score_bioicons_entry(name: str, entry: dict, query: str, require_all_tokens: bool = True) -> int:
+    tokens = [token for token in normalize_text(query).split() if token]
+    if not tokens:
+        return 0
+
+    normalized_name = normalize_text(name)
+    normalized_category = normalize_text(entry.get("category", ""))
+    haystack = normalize_text(
+        " ".join(
+            [
+                name,
+                entry.get("category", ""),
+                entry.get("license", ""),
+                entry.get("author", ""),
+            ]
+        )
+    )
+
+    if require_all_tokens and not all(token in haystack for token in tokens):
+        return 0
+    if not require_all_tokens and not any(token in haystack for token in tokens):
+        return 0
+
+    score = 0
+    name_words = normalized_name.split()
+    category_words = normalized_category.split()
+    for token in tokens:
+        if token in name_words:
+            score += 18
+        elif token in normalized_name:
+            score += 10
+        if token in category_words:
+            score += 7
+        elif token in normalized_category:
+            score += 4
+        elif token in haystack:
+            score += 1
+
+    normalized_query = normalize_text(query)
+    if normalized_name == normalized_query:
+        score += 60
+    if normalized_name.startswith(normalized_query):
+        score += 25
+    if normalized_category == normalized_query:
+        score += 15
+    return score
+
+
 def search_bioicons(query: str, limit: int, entries_by_name: dict[str, dict] | None = None) -> list[str]:
     entries_by_name = entries_by_name or bioicons_entry_map()
-    tokens = [token for token in normalize_text(query).split() if token]
+    query_variants = expanded_query_variants(BIOICONS_QUERY_ALIASES, query)
     scored: list[tuple[int, str]] = []
     for name, entry in entries_by_name.items():
-        haystack = normalize_text(
-            " ".join(
-                [
-                    name,
-                    entry.get("category", ""),
-                    entry.get("license", ""),
-                    entry.get("author", ""),
-                ]
-            )
-        )
-        if tokens and not all(token in haystack for token in tokens):
+        score = max(score_bioicons_entry(name, entry, variant) for variant in query_variants)
+        if not score:
+            score = score_bioicons_entry(name, entry, query, require_all_tokens=False)
+        if not score:
             continue
-        score = 0
-        normalized_name = normalize_text(name)
-        normalized_category = normalize_text(entry.get("category", ""))
-        for token in tokens:
-            if token in normalized_name:
-                score += 10
-            if token in normalized_category:
-                score += 4
-            if token in haystack:
-                score += 1
         scored.append((score, name))
     scored.sort(key=lambda item: (-item[0], item[1].lower()))
     return [name for _, name in scored[:limit]]
@@ -654,13 +751,13 @@ def write_preview(out_dir: Path, downloaded: list[DownloadedIcon]) -> None:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Search and download editable SVG icons from BioIcons, Iconify, and optional Svg/icons CLI."
+        description="Search and download editable SVG icons from BioIcons, Tabler, Iconify, and optional Svg/icons CLI."
     )
     parser.add_argument(
         "--provider",
         choices=["auto", "bioicons", "iconify", "tabler", "svgicons", "all"],
         default="auto",
-        help="Icon source. auto searches/downloads BioIcons, Tabler, then Iconify.",
+        help="Icon source. auto searches/downloads BioIcons, Tabler, then Iconify; all adds Svg/icons only when installed.",
     )
     parser.add_argument("--search", action="append", default=[], help="Search term. May be repeated.")
     parser.add_argument("--recommend", help="Use Svg/icons CLI to recommend icons for a brief.")

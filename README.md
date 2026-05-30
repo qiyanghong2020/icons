@@ -53,7 +53,8 @@ scripts/icons.py --list-presets
 scripts/icons.py --preset gene --out gene_icons
 scripts/icons.py --provider bioicons --preset antibody oncology --out bioicons_set
 scripts/icons.py --provider tabler --preset flow chart safety --out flow_icons
-scripts/icons.py --provider all --search "immune cell" --limit 20
+scripts/icons.py --provider all --search "antibody" --limit 20
+scripts/icons.py --provider bioicons --search "immune cell" --limit 20
 scripts/icons.py --provider tabler --search "warning" --download-search 5 --out warning_icons
 scripts/icons.py --icons bioicons:DNA_double_helix mdi:dna lucide:dna --out selected_icons
 ```
@@ -69,7 +70,7 @@ The script requires Python 3 and network access.
 | `tabler` | Flowchart, warning, target, chart, shield, clipboard, and UI symbols | MIT-licensed Tabler icons via Iconify |
 | `iconify` | Broad open-source icon coverage | Each icon set has its own license |
 | `svgicons` | Prompt-style recommendation and Pro workflows | Requires local `svgicons` CLI; some actions may require a Pro token |
-| `all` | Broad exploration | Searches all available providers |
+| `all` | Broad exploration | Searches BioIcons, Tabler, Iconify, and Svg/icons only when the CLI is installed |
 
 ## Presets
 

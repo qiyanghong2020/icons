@@ -18,7 +18,8 @@ scripts/icons.py --list-presets
 scripts/icons.py --preset gene --out gene_icons
 scripts/icons.py --provider bioicons --preset antibody oncology --out bioicons_set
 scripts/icons.py --provider tabler --preset flow chart safety --out flow_icons
-scripts/icons.py --provider all --search "immune cell" --limit 20
+scripts/icons.py --provider all --search "antibody" --limit 20
+scripts/icons.py --provider bioicons --search "immune cell" --limit 20
 scripts/icons.py --provider tabler --search "warning" --download-search 5 --out warning_icons
 scripts/icons.py --provider bioicons --search "microscope" --download-search 6 --out microscope_icons
 scripts/icons.py --icons bioicons:DNA_double_helix mdi:dna lucide:dna --out selected_icons
@@ -32,7 +33,7 @@ The script writes SVG files, `LICENSES.tsv`, and `preview.html`.
 - Use `--provider bioicons` for biology, chemistry, molecular biology, genomics, immunology, oncology, cell culture, and lab apparatus.
 - Use `--provider tabler` for uniform linear process symbols: arrows, warnings, targets, charts, clipboards, shields, search, settings, and simple lab/UI icons.
 - Use `--provider iconify` for broad UI/general icons or when a BioIcons result is too illustrative.
-- Use `--provider all` when exploring broadly.
+- Use `--provider all` when exploring broadly; it skips Svg/icons unless the CLI is installed.
 - Use `--provider svgicons`, `--recommend`, or `--pick` only when the local `svgicons` CLI is installed. Some Svg/icons workflows require a Pro API token.
 
 ## Workflow
